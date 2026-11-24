@@ -15,6 +15,7 @@
     Add product
 </button>
 
+@* GET form: it submits itself when toggled, and the controller reads showInactive from the URL *@
 <form method="get" asp-action="Index" class="form-check my-3">
     <input type="checkbox" name="showInactive" value="true" id="showInactive"
            class="form-check-input"
@@ -76,6 +77,7 @@
             </div>
 
             <form asp-action="Edit" method="post">
+                @* Hidden: sends the product Id so Edit knows which row to update *@
                 <input type="hidden" name="Id" id="editId" />
 
                 <div class="modal-body">
@@ -99,6 +101,8 @@
                         <label class="form-label">Stock</label>
                         <input name="Stock" id="editStock" type="number" min="0" class="form-control" required />
                     </div>
+                    @* An unchecked checkbox sends nothing, so the hidden "false" covers that case.
+   It goes after the checkbox so "true" wins when it is checked *@
                     <div class="form-check">
                         <input type="checkbox" name="IsActive" value="true" id="editActive" class="form-check-input" />
                         <input type="hidden" name="IsActive" value="false" />
@@ -137,6 +141,8 @@
                 <td>@product.Stock</td>
                 <td>@(product.IsActive ? "Yes" : "No")</td>
 
+                @* The data-* attributes carry this row's values; the script below copies them into the edit modal.
+   Price uses InvariantCulture because number inputs expect a dot as decimal separator *@
                 <td>
                     <button type="button" class="btn btn-sm btn-outline-primary"
                             data-bs-toggle="modal" data-bs-target="#editProductModal"
@@ -158,9 +164,11 @@
 
 @section Scripts {
     <script>
+        // Fill the edit modal with the data of the row whose Edit button opened it
         const editModal = document.getElementById('editProductModal');
 
         editModal.addEventListener('show.bs.modal', function (event) {
+            // relatedTarget is the button that triggered the modal
             const button = event.relatedTarget;
 
             document.getElementById('editId').value = button.getAttribute('data-id');
