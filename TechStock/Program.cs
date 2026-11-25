@@ -12,7 +12,7 @@ builder.Services.AddDbContext<TechStockContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 var app = builder.Build();
 
-// NEW: fix the app culture to US English so decimals use a dot (16000.50)
+// fix the app culture to US English so decimals use a dot (16000.50)
 var supportedCultures = new[] { new CultureInfo("en-US") };
 app.UseRequestLocalization(new RequestLocalizationOptions
 {

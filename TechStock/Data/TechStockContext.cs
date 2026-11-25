@@ -20,7 +20,7 @@ public class TechStockContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // Nombres reales de las tablas (en singular)
+        // Real table names (singular); the DbSet properties are plural
         modelBuilder.Entity<Product>().ToTable("Product");
         modelBuilder.Entity<Supplier>().ToTable("Supplier");
         modelBuilder.Entity<ProductSupplier>().ToTable("ProductSupplier");
@@ -30,11 +30,11 @@ public class TechStockContext : DbContext
         modelBuilder.Entity<SaleDetail>().ToTable("SaleDetail");
         modelBuilder.Entity<StockMovement>().ToTable("StockMovement");
 
-        // Llave primaria compuesta de la tabla intermedia
+        // Composite primary key: each row is identified by the product + supplier pair
         modelBuilder.Entity<ProductSupplier>()
             .HasKey(ps => new { ps.ProductId, ps.SupplierId });
 
-        // Precisión de los decimales, igual que en las columnas de SQL
+        // Fixed to US English so decimals use a dot (e.g. 16000.50), as sent by the numeric inputs
         modelBuilder.Entity<Product>().Property(p => p.Price).HasPrecision(10, 2);
         modelBuilder.Entity<Purchase>().Property(p => p.Total).HasPrecision(18, 2);
         modelBuilder.Entity<PurchaseDetail>().Property(d => d.UnitCost).HasPrecision(10, 2);
